@@ -6,6 +6,10 @@ import {
     Page,
     SkeletonBodyText,
 } from "@shopify/polaris";
+import { QRCodeIndex } from "../components";
+
+// mock
+import { QRCodesData } from "../mock-data";
 
 export default function HomePage() {
     /*
@@ -20,7 +24,11 @@ export default function HomePage() {
     */
     const isLoading = false;
     const isRefetching = false;
-    const QRCodes = [];
+    const QRCodes = QRCodesData;
+    /* Set the QR codes to use in the list */
+    const qrCodesMarkup = QRCodes?.length ? (
+        <QRCodeIndex QRCodes={QRCodes} loading={isRefetching} />
+    ) : null;
 
     /* loadingMarkup uses the loading component from AppBridge and components from Polaris  */
     const loadingMarkup = isLoading ? (
@@ -55,7 +63,9 @@ export default function HomePage() {
       and include the empty state contents set above.
     */
     return (
-        <Page>
+        <Page
+            fullWidth={!!qrCodesMarkup}
+        >
             <TitleBar
                 title="QR codes test app"
                 primaryAction={{
@@ -67,6 +77,7 @@ export default function HomePage() {
                 <Layout.Section>
                     {loadingMarkup}
                     {emptyStateMarkup}
+                    {qrCodesMarkup}
                 </Layout.Section>
             </Layout>
         </Page>
