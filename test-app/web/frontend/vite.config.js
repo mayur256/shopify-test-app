@@ -43,21 +43,25 @@ if (host === "localhost") {
 }
 
 export default defineConfig({
-  root: dirname(fileURLToPath(import.meta.url)),
-  plugins: [react()],
-  define: {
-    "process.env.SHOPIFY_API_KEY": JSON.stringify(process.env.SHOPIFY_API_KEY),
-  },
-  resolve: {
-    preserveSymlinks: true,
-  },
-  server: {
-    host: "localhost",
-    port: process.env.FRONTEND_PORT,
-    hmr: hmrConfig,
-    proxy: {
-      "^/(\\?.*)?$": proxyOptions,
-      "^/api(/|(\\?.*)?$)": proxyOptions,
+    root: dirname(fileURLToPath(import.meta.url)),
+    plugins: [react()],
+    define: {
+        "process.env.SHOPIFY_API_KEY": JSON.stringify(
+            process.env.SHOPIFY_API_KEY
+        ),
     },
-  },
+    resolve: {
+        preserveSymlinks: true,
+    },
+    server: {
+        host: "localhost",
+        port: process.env.FRONTEND_PORT,
+        hmr: hmrConfig,
+        proxy: {
+            "^/(\\?.*)?$": proxyOptions,
+            "^/api(/|(\\?.*)?$)": proxyOptions,
+            "^/qrcodes/[0-9]+/image(\\?.*)?$": proxyOptions,
+            "^/qrcodes/[0-9]+/scan(\\?.*)?$": proxyOptions,
+        },
+    },
 });

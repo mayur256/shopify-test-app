@@ -1,3 +1,6 @@
+// Custom hooks
+import { useAppQuery } from "../hooks";
+
 import { useNavigate, TitleBar, Loading } from "@shopify/app-bridge-react";
 import {
     Card,
@@ -9,7 +12,7 @@ import {
 import { QRCodeIndex } from "../components";
 
 // mock
-import { QRCodesData } from "../mock-data";
+// import { QRCodesData } from "../mock-data";
 
 export default function HomePage() {
     /*
@@ -19,13 +22,22 @@ export default function HomePage() {
     */
     const navigate = useNavigate();
 
-    /*
-      These are mock values. Setting these values lets you preview the loading markup and the empty state.
-    */
-    const isLoading = false;
-    const isRefetching = false;
-    const QRCodes = QRCodesData;
-    /* Set the QR codes to use in the list */
+    /* useAppQuery wraps react-query and the App Bridge authenticatedFetch function */
+    const {
+        data: QRCodes,
+        isLoading,
+
+        /*
+          react-query provides stale-while-revalidate caching.
+          By passing isRefetching to Index Tables we can show stale data and a loading state.
+          Once the query refetches, IndexTable updates and the loading state is removed.
+          This ensures a performant UX.
+        */
+        isRefetching,
+    } = useAppQuery({
+        url: "/api/qrcodes",
+    });
+
     const qrCodesMarkup = QRCodes?.length ? (
         <QRCodeIndex QRCodes={QRCodes} loading={isRefetching} />
     ) : null;
